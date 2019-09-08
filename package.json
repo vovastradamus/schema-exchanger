@@ -1,0 +1,20 @@
+{
+  "name": "schema-exchanger",
+  "version": "1.0.0",
+  "description": "Move data schema to another data schema",
+  "main": "index.html",
+  "scripts": {
+    "start": "parcel src/exchanger/index.js --open",
+    "build": "parcel build src/exchanger/index.js",
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.2.0",
+    "@babel/preset-env": "^7.6.0",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0",
+    "parcel-bundler": "^1.6.1"
+  },
+  "keywords": []
+}
