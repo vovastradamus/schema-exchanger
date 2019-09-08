@@ -2,6 +2,10 @@
   "name": "schema-exchanger",
   "version": "1.0.0",
   "description": "Move data schema to another data schema",
+  "author": {
+    "email": "vovastradamus@gmail.com",
+    "name": "Vovstradamus"
+  },
   "main": "dist/index.js",
   "scripts": {
     "start": "parcel src/exchanger/index.js --open",
