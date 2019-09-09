@@ -8,7 +8,7 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "start": "parcel src/exchanger/index.js --open",
+    "start": "parcel script/index.html --open -d development",
     "build": "parcel build src/exchanger/index.js",
     "test": "jest"
   },
