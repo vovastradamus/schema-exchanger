@@ -116,7 +116,8 @@ class Exchanger {
   }
   /**
    *
-   * @param {Exchanger} initialData
+   * @param {*} initialData
+   * @return {Exchanger}
    */
   static fromJson(initialData) {
     const schema = this.schema
