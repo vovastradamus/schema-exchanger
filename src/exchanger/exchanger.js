@@ -1,6 +1,20 @@
 import cloneDeep from "../utils/clondeDeep"
 
 /**
+ *
+ * @param {*} data
+ * @param {SchemaProp} schemaProp
+ * @param {String} [fromKey]
+ */
+function fetchInitialValue(data, schemaProp, fromKey) {
+  const { default: defaultValue = null, key } = schemaProp
+
+  return Object.prototype.hasOwnProperty.call(data, fromKey || key)
+    ? data[fromKey || key]
+    : defaultValue
+}
+
+/**
  * Copy initailJson data to exchanger schema
  * @param {*} toData
  * @param {Object<string, SchemaProp>} schema
@@ -11,7 +25,7 @@ function dataToExchanger(toData, schema, data) {
     if (schemaProp.key === undefined) {
       throw new Error("Schema prop must contains key prop")
     }
-    toData[shemaKey] = data[schemaProp.key]
+    toData[shemaKey] = fetchInitialValue(data, schemaProp)
 
     if (schemaProp.type) {
       validatePropType(schemaProp)
@@ -41,9 +55,11 @@ function exchangerToExchangerFactory(targetExchanger, sourceExchanger) {
 
   Object.entries(targetSchema).forEach(
     ([targetSchameKey, targetSchemaProp]) => {
-      const sourceValue = sourcedata[targetSchameKey]
-
-      targetData[targetSchameKey] = sourceValue
+      targetData[targetSchameKey] = fetchInitialValue(
+        sourcedata,
+        targetSchemaProp,
+        targetSchameKey
+      )
 
       if (targetSchemaProp.type) {
         validatePropType(targetSchemaProp)
@@ -82,8 +98,9 @@ function validatePropType(prop) {
 /**
  * @typedef {Object} SchemaProp
  * @property {String} key - out keys
- * @property {?String|Exchanger|Array<Exchanger>} type - data type
- * @property {Object<string, SchemaProp>} childrens
+ * @property {String|Exchanger|Array<Exchanger>} [type] - data type
+ * @property {*} [default] - value as default
+ * @property {Object<string, SchemaProp>} [childrens]
  */
 
 class Exchanger {
@@ -97,6 +114,10 @@ class Exchanger {
   static get schema() {
     return {}
   }
+  /**
+   *
+   * @param {Exchanger} initialData
+   */
   static fromJson(initialData) {
     const schema = this.schema
     const data = cloneDeep(initialData)
@@ -107,8 +128,8 @@ class Exchanger {
     return exchanger
   }
   /**
-   * @todo make cool
    * @param {*} sourceExchanger
+   * @returns {Exchanger}
    */
   static fromExchanger(sourceExchanger) {
     const exchanger = new this(sourceExchanger)
@@ -127,10 +148,9 @@ class Exchanger {
       const currValue = this._data[shemaKey]
 
       if (schemaProp.type) {
+        validatePropType(schemaProp)
+
         if (Array.isArray(schemaProp.type)) {
-          if (schemaProp.type.length !== 1) {
-            throw new Error("Array type must contains only one item")
-          }
           r[schemaProp.key] = currValue.map(d => d.toJSON())
         } else {
           r[schemaProp.key] = currValue.toJSON()

@@ -43,7 +43,8 @@ class LocalUser extends Exchanger {
         key: "id"
       },
       name: {
-        key: "name"
+        key: "name",
+        default: "unnamed"
       }
     }
   }
@@ -53,7 +54,8 @@ class OtherUser extends Exchanger {
   static get schema() {
     return {
       id: {
-        key: "uuid"
+        key: "uuid",
+        default: "uuid"
       },
       name: {
         key: "title"
@@ -122,4 +124,23 @@ test("Schema to Schema and rollback to local", () => {
 
   expect(localObj.toJSON()).toEqual(revertLcoalObj.toJSON())
   expect(LocalData).toEqual(revertLcoalObj.toJSON())
+})
+
+test("Default property", () => {
+  const localObj = LocalUser.fromJson({})
+
+  expect(localObj.toJSON()).toEqual({
+    id: null,
+    name: "unnamed"
+  })
+})
+
+test("Default property to another schema with default", () => {
+  const localObj = LocalUser.fromJson({})
+  const otherObj = OtherUser.fromExchanger(localObj)
+
+  expect(otherObj.toJSON()).toEqual({
+    uuid: null,
+    title: "unnamed"
+  })
 })
