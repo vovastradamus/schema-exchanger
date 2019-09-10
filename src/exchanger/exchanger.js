@@ -169,6 +169,13 @@ class Exchanger {
   get getter() {
     return this._data
   }
+
+  /**
+   * @returns {Object<string, SchemaProp>}
+   */
+  get schema() {
+    return this.constructor.schema
+  }
 }
 
 export default Exchanger
