@@ -144,3 +144,17 @@ test("Default property to another schema with default", () => {
     title: "unnamed"
   })
 })
+
+test("Test getter", () => {
+  const localObj = LocalUser.fromJson({})
+  const otherObj = OtherUser.fromExchanger(localObj)
+
+  expect(otherObj.getter).not.toBeUndefined()
+})
+
+test("Test schema", () => {
+  const localObj = LocalUser.fromJson({})
+  const otherObj = OtherUser.fromExchanger(localObj)
+
+  expect(otherObj.schema).toEqual(otherObj.constructor.schema)
+})
