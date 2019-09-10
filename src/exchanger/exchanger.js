@@ -140,7 +140,7 @@ class Exchanger {
     return exchanger
   }
   /**
-   *
+   * @return {*}
    */
   toJSON() {
     const schema = this.constructor.schema
@@ -162,6 +162,12 @@ class Exchanger {
     })
 
     return r
+  }
+  /**
+   * @returns {Object<*>}
+   */
+  get getter() {
+    return this._data
   }
 }
 
