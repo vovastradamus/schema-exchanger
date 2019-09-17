@@ -158,3 +158,39 @@ test("Test schema", () => {
 
   expect(otherObj.schema).toEqual(otherObj.constructor.schema)
 })
+
+test("Test skipper", () => {
+  class LEx extends Exchanger {
+    static get schema() {
+      return {
+        id: {
+          key: "id"
+        },
+        field: {
+          key: "field"
+        }
+      }
+    }
+  }
+
+  class TEx extends Exchanger {
+    static get schema() {
+      return {
+        id: {
+          key: "uuid",
+          skippers: () => true
+        },
+        field: {
+          key: "field"
+        }
+      }
+    }
+  }
+
+  const L = LEx.fromJson({})
+  const T = TEx.fromExchanger(L)
+
+  expect(T.toJSON()).toEqual({
+    field: null
+  })
+})
