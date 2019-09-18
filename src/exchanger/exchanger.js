@@ -178,7 +178,7 @@ class Exchanger {
     return r
   }
   /**
-   * @returns {Object<*>}
+   * @returns {Object<string, (Exchanger|Exchanger[])>}
    */
   get getter() {
     return this._data
