@@ -48,7 +48,7 @@ function dataToExchanger(toData, schema, data) {
  * @param {Exchanger} sourceExchanger
  */
 function exchangerToExchangerFactory(targetExchanger, sourceExchanger) {
-  const targetSchema = targetExchanger.constructor.schema
+  const targetSchema = targetExchanger.schema
 
   const targetData = targetExchanger._data
   const sourcedata = sourceExchanger._data
@@ -96,11 +96,19 @@ function validatePropType(prop) {
 }
 
 /**
+ * @typedef {Function} SkipperFunction
+ * @function SkipperFunction
+ * @param {*} value
+ * @param {Exchanger} target
+ */
+
+/**
  * @typedef {Object} SchemaProp
  * @property {String} key - out keys
  * @property {String|Exchanger|Array<Exchanger>} [type] - data type
  * @property {*} [default] - value as default
  * @property {Object<string, SchemaProp>} [childrens]
+ * @property {SkipperFunction[]|SkipperFunction} [skippers] - skipper function used when call toJSON
  */
 
 class Exchanger {
@@ -143,10 +151,16 @@ class Exchanger {
    * @return {*}
    */
   toJSON() {
-    const schema = this.constructor.schema
+    const schema = this.schema
     let r = {}
     Object.entries(schema).forEach(([shemaKey, schemaProp]) => {
+      let { skippers = [] } = schemaProp
       const currValue = this._data[shemaKey]
+
+      skippers = Array.isArray(skippers) ? skippers : [skippers]
+      if (skippers.some(v => v.call(null, this, currValue))) {
+        return
+      }
 
       if (schemaProp.type) {
         validatePropType(schemaProp)
@@ -164,7 +178,7 @@ class Exchanger {
     return r
   }
   /**
-   * @returns {Object<*>}
+   * @returns {Object<string, (Exchanger|Exchanger[])>}
    */
   get getter() {
     return this._data
