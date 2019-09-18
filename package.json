@@ -1,6 +1,6 @@
 {
   "name": "schema-exchanger",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Move data schema to another data schema",
   "homepage": "https://github.com/vovastradamus/schema-exchanger",
   "license": "SEE LICENSE IN LICENSE",
