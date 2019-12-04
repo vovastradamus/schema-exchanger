@@ -1,4 +1,5 @@
 const { default: Exchanger } = require("./exchanger")
+const skippers = require("./skipFunctions")
 
 class LocalSchema extends Exchanger {
   static get schema() {
@@ -179,6 +180,42 @@ test("Test skipper", () => {
         id: {
           key: "uuid",
           skippers: () => true
+        },
+        field: {
+          key: "field"
+        }
+      }
+    }
+  }
+
+  const L = LEx.fromJson({})
+  const T = TEx.fromExchanger(L)
+
+  expect(T.toJSON()).toEqual({
+    field: null
+  })
+})
+
+test("Test skipper null", () => {
+  class LEx extends Exchanger {
+    static get schema() {
+      return {
+        id: {
+          key: "id"
+        },
+        field: {
+          key: "field"
+        }
+      }
+    }
+  }
+
+  class TEx extends Exchanger {
+    static get schema() {
+      return {
+        id: {
+          key: "uuid",
+          skippers: skippers.skipNull
         },
         field: {
           key: "field"
