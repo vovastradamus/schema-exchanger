@@ -1,7 +1,7 @@
-export function force(value, target) {
+export function force(target, value) {
   return true
 }
 
-export function skipNull(value, target) {
+export function skipNull(target, value) {
   return value === null
 }
